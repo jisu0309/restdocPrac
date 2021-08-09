@@ -30,7 +30,7 @@ public class UserService {
         Optional<User> user = userRepository.findById(requestUser.getId());
 
         return user.map(dbUser -> {
-            dbUser.setAcocunt(requestUser.getAcocunt());
+            dbUser.setAccount(requestUser.getAccount());
             dbUser.setEmail(requestUser.getEmail());
             dbUser.setPhoneNumber(requestUser.getPhoneNumber());
             dbUser.setUpdateAt(LocalDateTime.now());

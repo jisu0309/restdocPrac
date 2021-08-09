@@ -14,7 +14,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public Header<User> create(@RequestBody User requestUser){
+    public Header<User> create(User requestUser){
         User user = userService.create(requestUser);
 
         if(user != null){
@@ -34,7 +34,7 @@ public class UserController {
     }
 
     @PutMapping
-    public Header<User> update(@RequestBody User requestUser){
+    public Header<User> update(User requestUser){
         User user = userService.update(requestUser);
 
 
