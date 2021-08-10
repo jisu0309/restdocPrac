@@ -1,7 +1,8 @@
 plugins {
 	id 'org.springframework.boot' version '2.5.3'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id 'org.asciidoctor.convert' version '1.5.8'
+	//id 'org.asciidoctor.convert' version '1.5.8'
+	id 'org.asciidoctor.jvm.convert' version '3.3.2'
 	id 'java'
 }
 
@@ -15,12 +16,16 @@ configurations {
 	}
 }
 
+configurations {
+	asciidoctorExtensions
+}
+
 repositories {
 	mavenCentral()
 }
 
 ext {
-	set('snippetsDir', file("build/generated-snippets"))
+	snippetsDir = file('build/generated-snippets')
 }
 
 dependencies {
@@ -30,10 +35,11 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 	annotationProcessor 'org.projectlombok:lombok'
+	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'junit:junit:4.12'
 	//implementation 'org.springframework.boot:spring-test:5.3.9'
-	asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+//	asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
 
@@ -43,10 +49,15 @@ test {
 }
 
 asciidoctor {
+	configurations 'asciidoctorExtensions'
 	inputs.dir snippetsDir
 	dependsOn test
 }
 
 bootJar {
 	dependsOn asciidoctor
+	copy {
+		from "${asciidoctor.outputDir}"            // /html5를 사용하지 않는다!
+		into 'src/main/resources/static/docs'    // /static/docs로 복사!
+	}
 }
